@@ -5,6 +5,7 @@ import { Navbar } from "./components";
 import { fetchRapidApi } from "./fetchingApi";
 import Channel from "./pages/Channel";
 import Home from "./pages/Home";
+import Search from "./pages/Search";
 import VideoDetails from "./pages/VideoDetails";
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/" exact element={<Home />} />
             <Route path="/videos/:videoid" element={<VideoDetails />} />
             <Route path="/channel/:channelid" element={<Channel />} />
+            <Route path="/search/:searchid" element={<Search />} />
           </Routes>
         )}
       </BrowserRouter>

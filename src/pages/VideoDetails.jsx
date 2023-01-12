@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { fetchRapidApi } from "../fetchingApi";
 import ReactPlayer from "react-player";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Skeleton, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { CheckCircle } from "@mui/icons-material";
-import { Videos } from "../components";
+import { Loader, Videos } from "../components";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -23,17 +23,16 @@ const VideoDetails = () => {
   const [video, setVideo] = useState(null);
   const [comments, setComments] = useState(null);
   const [suggestedVideos, setSuggestedVideos] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [loadingComments, setLoadingComments] = useState(true);
   const [loadingSuggestion, setLoadingSuggestion] = useState(true);
 
   useEffect(() => {
+    document.title = `videoHub - Videos / ${videoid}`;
     //fetching video details
     fetchRapidApi(
       `videos?part=contentDetails,snippet,statistics&id=${videoid}`
     ).then((data) => {
       setVideo(data.items[0]);
-      setLoading(false);
     });
 
     // fetching video comments
@@ -59,7 +58,7 @@ const VideoDetails = () => {
         <Stack
           sx={{ display: "flex", flexDirection: { sm: "column", md: "row" } }}
         >
-          {!loading ? (
+          {!loadingComments ? (
             <Stack sx={{ width: { md: "75vw" } }}>
               <ReactPlayer
                 url={`https://www.youtube.com/watch?v=${videoid}`}
@@ -77,7 +76,7 @@ const VideoDetails = () => {
                     padding: "0 5px",
                   }}
                 >
-                  {video.snippet.title}
+                  {video?.snippet?.title}
                 </Typography>
                 <Stack
                   direction="row"
@@ -87,7 +86,7 @@ const VideoDetails = () => {
                   }}
                   justifyContent="space-between"
                 >
-                  <Link to={`/channel/${video.snippet.channelId}`}>
+                  <Link to={`/channel/${video?.snippet?.channelId}`}>
                     <Typography
                       sx={{
                         fontSize: { xs: "1.2em", md: "2em" },
@@ -99,7 +98,7 @@ const VideoDetails = () => {
                         borderRadius: "10px",
                       }}
                     >
-                      {video.snippet.channelTitle}
+                      {video?.snippet?.channelTitle}
                       <CheckCircle
                         sx={{
                           marginLeft: "5px",
@@ -124,7 +123,7 @@ const VideoDetails = () => {
                         color: "#171717",
                       }}
                     >
-                      {parseInt(video.statistics.viewCount).toLocaleString()}{" "}
+                      {parseInt(video?.statistics?.viewCount).toLocaleString()}{" "}
                       Views
                     </Typography>
                     <Typography
@@ -135,15 +134,14 @@ const VideoDetails = () => {
                         color: "#171717",
                       }}
                     >
-                      {parseInt(video.statistics.likeCount).toLocaleString()}{" "}
+                      {parseInt(video?.statistics?.likeCount).toLocaleString()}{" "}
                       Likes
                     </Typography>
                   </Box>
                 </Stack>
               </Stack>
 
-              {/* // loading */}
-              {!loadingComments ? (
+              {comments && (
                 <Stack
                   sx={{
                     padding: {
@@ -173,7 +171,7 @@ const VideoDetails = () => {
                           pb: "10px",
                         }}
                       >
-                        {comments.pageInfo.totalResults} Comments
+                        {comments?.pageInfo?.totalResults} Comments
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -187,7 +185,6 @@ const VideoDetails = () => {
                               flexDirection: "column",
                               alignItems: "flex-start",
                               justifyContent: "center",
-
                               marginBottom: "30px",
                             }}
                           >
@@ -203,8 +200,8 @@ const VideoDetails = () => {
                             >
                               <Avatar
                                 src={
-                                  items.snippet.topLevelComment.snippet
-                                    .authorProfileImageUrl
+                                  items?.snippet?.topLevelComment?.snippet
+                                    ?.authorProfileImageUrl
                                 }
                                 sx={{ width: "25px", height: "25px" }}
                               />
@@ -216,8 +213,8 @@ const VideoDetails = () => {
                                 variant="button"
                               >
                                 {
-                                  items.snippet.topLevelComment.snippet
-                                    .authorDisplayName
+                                  items?.snippet?.topLevelComment?.snippet
+                                    ?.authorDisplayName
                                 }
                               </Typography>
                             </Box>
@@ -226,11 +223,11 @@ const VideoDetails = () => {
                               <Typography
                                 sx={{ fontSize: { xs: ".9em", md: "1em" } }}
                               >
-                                {items.snippet.topLevelComment.snippet
-                                  .textDisplay.length < 100
-                                  ? items.snippet.topLevelComment.snippet
-                                      .textDisplay
-                                  : items.snippet.topLevelComment.snippet.textDisplay.slice(
+                                {items?.snippet?.topLevelComment?.snippet
+                                  ?.textDisplay.length < 100
+                                  ? items?.snippet?.topLevelComment?.snippet
+                                      ?.textDisplay
+                                  : items?.snippet?.topLevelComment?.snippet?.textDisplay.slice(
                                       0,
                                       100
                                     ) + "....."}
@@ -249,7 +246,7 @@ const VideoDetails = () => {
                       display: { xs: "none" },
                     }}
                   >
-                    {comments.pageInfo.totalResults} Comments
+                    {comments?.pageInfo?.totalResults} Comments
                   </Typography>
 
                   {comments.items.map((items, index) => {
@@ -277,8 +274,8 @@ const VideoDetails = () => {
                         >
                           <Avatar
                             src={
-                              items.snippet.topLevelComment.snippet
-                                .authorProfileImageUrl
+                              items?.snippet?.topLevelComment?.snippet
+                                ?.authorProfileImageUrl
                             }
                             sx={{ width: "25px", height: "25px" }}
                           />
@@ -290,8 +287,8 @@ const VideoDetails = () => {
                             variant="button"
                           >
                             {
-                              items.snippet.topLevelComment.snippet
-                                .authorDisplayName
+                              items?.snippet?.topLevelComment?.snippet
+                                ?.authorDisplayName
                             }
                           </Typography>
                         </Box>
@@ -300,11 +297,11 @@ const VideoDetails = () => {
                           <Typography
                             sx={{ fontSize: { xs: ".9em", md: "1em" } }}
                           >
-                            {items.snippet.topLevelComment.snippet.textDisplay
-                              .length < 100
-                              ? items.snippet.topLevelComment.snippet
-                                  .textDisplay
-                              : items.snippet.topLevelComment.snippet.textDisplay.slice(
+                            {items?.snippet?.topLevelComment?.snippet
+                              ?.textDisplay.length < 100
+                              ? items?.snippet?.topLevelComment?.snippet
+                                  ?.textDisplay
+                              : items?.snippet?.topLevelComment?.snippet?.textDisplay.slice(
                                   0,
                                   100
                                 ) + "....."}
@@ -314,35 +311,95 @@ const VideoDetails = () => {
                     );
                   })}
                 </Stack>
-              ) : (
-                "loading comments...."
               )}
             </Stack>
           ) : (
-            // <Box sx={{ width: "100vw", margin: "15px 0" }}>
-            //   <Skeleton variant="rectangular" width={"100vw"} height={"30vh"} />
-            //   <Stack
-            //     direction={"row"}
-            //     justifyContent="space-between"
-            //     alignItems="center"
-            //     sx={{
-            //       padding: {
-            //         xs: "10px 10px",
-            //         sm: "10px 10px",
-            //         md: "10px 100px",
-            //       },
-            //     }}
-            //   >
-            //     <Skeleton variant="circular" width={50} height={50} />
-            //     <Skeleton variant="rounded" width={245} height={40} />
-            //   </Stack>
-            // </Box>
-            "loading..."
+            <Stack display="flex" flexDirection={"column"}>
+              <Box sx={{ width: { md: "75vw" } }}>
+                <Skeleton
+                  variant="rectangular"
+                  width={"100%"}
+                  height={"30vh"}
+                />
+                <Stack
+                  direction={"row"}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{
+                    padding: {
+                      xs: "10px 2px",
+                      sm: "10px 10px",
+                      md: "10px 100px",
+                    },
+                  }}
+                >
+                  <Skeleton variant="circular" width={50} height={50} />
+                  <Skeleton variant="rounded" width={215} height={40} />
+                </Stack>
+              </Box>
+              <Box
+                sx={{
+                  width: { md: "75vw" },
+                  padding: {
+                    xs: "10px 2px",
+                    sm: "10px 10px",
+                    md: "10px 50px",
+                  },
+                }}
+              >
+                <Skeleton variant="rounded" width={"100%"} height={40} />
+                <Stack
+                  direction={"row"}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{
+                    padding: {
+                      xs: "10px 5px",
+                      sm: "10px 10px",
+                      md: "10px 10px",
+                    },
+                  }}
+                >
+                  <Skeleton variant="circular" width={40} height={40} />
+                  <Skeleton variant="rounded" width={"80%"} height={40} />
+                </Stack>
+                <Stack
+                  direction={"row"}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{
+                    padding: {
+                      xs: "10px 5px",
+                      sm: "10px 10px",
+                      md: "10px 10px",
+                    },
+                  }}
+                >
+                  <Skeleton variant="circular" width={40} height={40} />
+                  <Skeleton variant="rounded" width={"80%"} height={40} />
+                </Stack>{" "}
+                <Stack
+                  direction={"row"}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{
+                    padding: {
+                      xs: "10px 5px",
+                      sm: "10px 10px",
+                      md: "10px 10px",
+                    },
+                  }}
+                >
+                  <Skeleton variant="circular" width={40} height={40} />
+                  <Skeleton variant="rounded" width={"80%"} height={40} />
+                </Stack>
+              </Box>
+            </Stack>
           )}
           <Stack
             sx={{
               width: { md: "25vw" },
-              borderTop: { xs: "1px solid grey" },
+              borderTop: { xs: "1px solid grey", sm: "none" },
               p: { xs: "15px", md: "10px" },
             }}
           >
@@ -364,10 +421,20 @@ const VideoDetails = () => {
                 flexWrap="wrap"
                 justifyContent="space-around"
               >
-                <Videos videos={suggestedVideos.items} />
+                <Videos videos={suggestedVideos?.items} />
               </Stack>
             ) : (
-              "loading...."
+              <Stack
+                direction="row"
+                sx={{
+                  overflowY: "auto",
+                  height: { md: "95.2%" },
+                }}
+                flexWrap="wrap"
+                justifyContent="space-around"
+              >
+                <Loader times={30} />
+              </Stack>
             )}
           </Stack>
         </Stack>

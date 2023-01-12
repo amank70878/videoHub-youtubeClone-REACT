@@ -11,6 +11,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "videoHub - Home";
     fetchRapidApi(
       `search?part=snippet&q=${selectedCategoryState}&regionCode=IN&maxResults=100&order=date`
     )

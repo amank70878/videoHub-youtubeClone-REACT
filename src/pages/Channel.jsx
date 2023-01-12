@@ -1,5 +1,5 @@
 import { AddCircleOutlineRounded } from "@mui/icons-material";
-import { Button, Skeleton, Typography } from "@mui/material";
+import { Avatar, Button, CardMedia, Skeleton, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -15,6 +15,7 @@ const Channel = () => {
   const [loadingChannelVideos, setLoadingChannelVideos] = useState(true);
 
   useEffect(() => {
+    document.title = `videoHub - Channel / ${channelid}`;
     //fetching channel details
     fetchRapidApi(`channels?part=snippet,statistics&id=${channelid}`).then(
       (data) => {
@@ -55,51 +56,62 @@ const Channel = () => {
             width: "100vw",
             overflowX: "hidden",
             overflowY: "auto",
+            minHeight: { xs: "56vh", sm: "56vh", md: "56vh", lg: "44vh" },
           }}
         >
           <Box width="100vw" bgcolor="#000">
-            <img
-              src={channel.brandingSettings.image.bannerExternalUrl}
+            <CardMedia
+              component="img"
+              src={channel?.brandingSettings?.image?.bannerExternalUrl}
               alt=""
               className="channelThumbnail"
             />
           </Box>
           <Stack
             sx={{
-              flexDirection: { xs: "column", md: "row" },
+              flexDirection: { md: "column", lg: "row" },
               justifyContent: "space-between",
               alignItems: "center",
               padding: { xs: " 0 10px", md: "0 60px" },
               gap: "20px",
-              position: { xs: "absolute", md: "relative" },
-              top: { xs: "26vh", md: "0%" },
-              left: { xs: "50%" },
-              transform: { xs: "translateX(-50%)" },
+              position: {
+                xs: "absolute",
+                sm: "absolute",
+                md: "absolute",
+                lg: "relative",
+              },
+              top: { xs: "23vh", sm: "23vh", md: "23vh", lg: "0%" },
+              left: { xs: "50%", sm: "50%", md: "50%" },
+              transform: {
+                xs: "translateX(-50%)",
+                sm: "translateX(-50%)",
+                md: "translateX(-50%)",
+              },
+              zIndex: 10,
             }}
           >
             <Stack
               sx={{
-                flexDirection: { sm: "column", md: "row" },
+                flexDirection: { md: "column", lg: "row" },
                 alignItems: "center",
                 gap: "10px",
               }}
             >
-              <img
-                src={channel.snippet.thumbnails.high.url}
-                alt=""
+              <Avatar
+                src={channel?.snippet?.thumbnails?.high?.url}
                 className="channelProfile"
               />
               <Box>
                 <Typography
                   sx={{
-                    fontSize: { xs: "1.4em", md: "1.7em" },
+                    fontSize: { xs: "1.4em", md: "1.5em" },
                     fontWeight: "500",
                     letterSpacing: ".2px",
                     lineHeight: 1.3,
                     textAlign: { xs: "center" },
                   }}
                 >
-                  {channel.snippet.title}
+                  {channel?.snippet?.title}
                 </Typography>
                 <Typography
                   sx={{
@@ -110,7 +122,7 @@ const Channel = () => {
                     textAlign: { xs: "center" },
                   }}
                 >
-                  {channel.snippet.customUrl}
+                  {channel?.snippet?.customUrl}
                 </Typography>
                 <Typography
                   sx={{
@@ -122,7 +134,7 @@ const Channel = () => {
                   }}
                 >
                   {parseInt(
-                    channel.statistics.subscriberCount
+                    channel?.statistics?.subscriberCount
                   ).toLocaleString()}{" "}
                   Subscriber
                 </Typography>
@@ -141,7 +153,7 @@ const Channel = () => {
       <Stack>
         {!loadingChannels && (
           <Typography variant="h5" textAlign="center">
-            {channel.snippet.title} Videos
+            {channel?.snippet?.title} Videos
           </Typography>
         )}
         <Stack
@@ -155,7 +167,7 @@ const Channel = () => {
           justifyContent="space-around"
         >
           {!loadingChannelVideos ? (
-            <Videos videos={channelVideos.items} />
+            <Videos videos={channelVideos?.items} />
           ) : (
             <Stack
               direction="row"

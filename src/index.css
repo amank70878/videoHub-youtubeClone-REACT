@@ -101,10 +101,17 @@ a {
 }
 
 .channelProfile {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 1px solid rgba(128, 128, 128, 0.553)
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(128, 128, 128, 0.553) !important;
+}
+
+@media screen and (max-width: 1200px) {
+  .channelProfile {
+    width: 100px !important;
+    height: 100px !important;
+  }
 }
 
 @media screen and (max-width: 900px) {
@@ -122,13 +129,18 @@ a {
   .category-btn .span2 {
     font-size: 1em;
   }
-}
 
-@media screen and (max-width:900px) {
+  .channelProfile {
+    width: 100px !important;
+    height: 100px !important;
+  }
+
   .copyright {
     display: none !important;
   }
 }
+
+
 
 @media screen and (max-width: 600px) {
   .scroll-horizontal {
@@ -142,6 +154,4 @@ a {
   .search-bar {
     width: 200px;
   }
-
-
 }

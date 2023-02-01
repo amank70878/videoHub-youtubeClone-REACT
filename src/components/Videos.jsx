@@ -18,6 +18,7 @@ import {
 } from "../utils/constants";
 
 const Videos = ({ videos }) => {
+  console.log(videos);
   return (
     <>
       {videos.map((items, index) => {
@@ -41,7 +42,7 @@ const Videos = ({ videos }) => {
               <Skeleton variant="rectangular" width={345} height={200} />
             )}
             <CardContent>
-              <Link to={`/videos/${items?.id?.videoId}`} key={index}>
+              <Link to={`/videos/${items?.snippet?.channelId}`} key={index}>
                 <Typography variant="body2" color="text.secondary">
                   {items?.snippet?.title
                     ? items?.snippet?.title
@@ -49,24 +50,26 @@ const Videos = ({ videos }) => {
                 </Typography>
               </Link>
             </CardContent>
-            <CardHeader
-              avatar={
-                <Avatar
-                  src={
-                    items?.snippet?.thumbnails?.high?.url
-                      ? items?.snippet?.thumbnails?.high?.url
-                      : demoProfilePicture
-                  }
-                />
-              }
-              action={
-                <IconButton aria-label="settings">
-                  <MoreVertIcon />
-                </IconButton>
-              }
-              title={items?.snippet?.channelTitle}
-              subheader="September 14, 2016"
-            />
+            <Link to={`/channel/${items?.snippet?.channelId}`}>
+              <CardHeader
+                avatar={
+                  <Avatar
+                    src={
+                      items?.snippet?.thumbnails?.high?.url
+                        ? items?.snippet?.thumbnails?.high?.url
+                        : demoProfilePicture
+                    }
+                  />
+                }
+                action={
+                  <IconButton aria-label="settings">
+                    <MoreVertIcon />
+                  </IconButton>
+                }
+                title={items?.snippet?.channelTitle}
+                subheader="September 14, 2016"
+              />
+            </Link>
           </Card>
         );
       })}
@@ -75,3 +78,5 @@ const Videos = ({ videos }) => {
 };
 
 export default Videos;
+
+//http://localhost:3000/channel/UCja491MDXvY9jY2lx7ham7Q
